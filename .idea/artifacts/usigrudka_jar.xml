@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="usigrudka:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/usigrudka_jar</output-path>
+    <root id="archive" name="usigrudka.jar">
+      <element id="module-output" name="usigrudka" />
+    </root>
+  </artifact>
+</component>
