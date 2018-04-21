@@ -5,14 +5,15 @@ import javafx.scene.media.MediaPlayer;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
 import java.util.Date;
 import javax.imageio.ImageIO;
 import javax.management.modelmbean.InvalidTargetObjectTypeException;
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Scanner;
 
 public class GamePanel extends JPanel implements ActionListener {
     int lastbirdcoor;
@@ -31,6 +32,9 @@ public class GamePanel extends JPanel implements ActionListener {
     int birdhe = 50;
     int score = 0;
     Image back;
+    String gameScoreFile = "score.wav";
+    boolean hah = true;
+    int maxscore = readscorefromfile();
 
 
     GamePanel() {
@@ -82,9 +86,17 @@ public class GamePanel extends JPanel implements ActionListener {
             drawpines(graphics);
             checklost(calculatecoordinate);
             if (checklost(calculatecoordinate) == false) {
+                
             }
             if (checklost(calculatecoordinate) == true) {
+                if (score > maxscore) {
+                    saverecord();
+                }
+                if (maxscore>=score) {
+                    hah = false;
+                }
                 gamemode = 2;
+
             }
 
         }
@@ -100,6 +112,16 @@ public class GamePanel extends JPanel implements ActionListener {
             graphics.setColor(Color.black);
             graphics.setFont(kol);
             graphics.drawString(String.valueOf(score), (width - width/10)/2, height/2);
+            if (hah == false) {
+                graphics.setColor(Color.RED);
+                String sorry = ("Old max score " + readscorefromfile());
+                graphics.drawString(sorry, width/4, height/2);
+            }
+            if (hah = true) {
+                graphics.setColor(Color.RED);
+                String yeah = ("new max score " + readscorefromfile());
+                graphics.drawString(yeah, width/4, height/2);
+            }
         }
         javax.swing.Timer timer = new javax.swing.Timer(1000 / 60, this);
         timer.start();
@@ -129,6 +151,24 @@ public class GamePanel extends JPanel implements ActionListener {
         trubodur.clear();
         yBirdCo = height / 2;
         score = 0;
+        hah = true;
+    }
+    void saverecord() {
+        try {
+            PrintWriter dascore = new PrintWriter(gameScoreFile);
+            dascore.write(String.valueOf(score));
+            dascore.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+    int readscorefromfile() {
+        try {
+            Scanner scanner = new Scanner(new FileInputStream(gameScoreFile));
+            return scanner.nextInt();
+        } catch (FileNotFoundException e) {
+            return -1;
+        }
     }
 
     boolean checklost(int topbirdedge) {
